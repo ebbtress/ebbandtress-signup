@@ -69,6 +69,14 @@
       color: #ffffff;
       border-radius: 5px;
     }
+    #error-message {
+      display: none;
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #ffcccc;
+      color: #185228;
+      border-radius: 5px;
+    }
     .footer {
       font-size: 12px;
       text-align: center;
@@ -103,6 +111,9 @@
     <div id="success-message">
       <p>Thank you for signing up! <a href="https://sites.google.com/view/ebbandtress/hair-emergency-guide/free-hair-emergency-guide?authuser=0" style="color: #D4AF37;">Click here</a> to access your Free Hair Emergency Guide. You’ll also receive a PDF version in your email shortly.</p>
     </div>
+    <div id="error-message">
+      <p>There was an error submitting your form. Please try again later or contact support at ebbandtress@gmail.com.</p>
+    </div>
 
     <div class="footer">© 2025 Ebb+Tress | You Deserve Healthy Hair!</div>
   </div>
@@ -119,18 +130,16 @@
         const response = await fetch('https://script.google.com/macros/s/AKfycbybtmqVQm-aQixhTAeFuGp24_mIFM0boeLwJDAxxpM4xjy_HfDzxhVxfULFxGnM2MFxYg/exec', {
           method: 'POST',
           body: JSON.stringify(data),
-          headers: { 'Content-Type': 'application/json' }
+          headers: { 'Content-Type': 'application/json' },
+          mode: 'no-cors' // Attempt to bypass CORS by accepting opaque responses
         });
-        const result = await response.json();
-
-        if (result.status === 'success') {
-          document.getElementById('signup-form').style.display = 'none';
-          document.getElementById('success-message').style.display = 'block';
-        } else {
-          alert('There was an error submitting your form. Please try again. Error: ' + result.message);
-        }
+        // Since mode: 'no-cors' returns an opaque response, we can't read the result
+        // Assume success if no immediate error, but this is a fallback
+        document.getElementById('signup-form').style.display = 'none';
+        document.getElementById('success-message').style.display = 'block';
       } catch (error) {
-        alert('Error: ' + error.message);
+        document.getElementById('error-message').style.display = 'block';
+        console.error('Fetch error:', error);
       }
     });
   </script>
